@@ -1,0 +1,30 @@
+spec:
+  server: https://kubernetes.default.svc
+  namespace: argocd
+ apps:
+  - name: simple-api-gitops-dev
+    project: default
+    namespace: sa-app
+    source:
+      path: .
+      repoURL: https://gitlab.dspace.kt.co.kr/icis-tr/sa/simple-api-gitops.git
+      targetRevision: dev
+  - name: simple-api-gitops-ait
+    project: default
+    namespace: sa-app
+    source:
+      path: .
+      repoURL: https://gitlab.dspace.kt.co.kr/icis-tr/sa/simple-api-gitops.git
+      targetRevision: ait
+#기타 옵션
+# 변경 사항에 따라 리소스를 업데이트할때, 기존의 리소스를 삭제하고 새로운 리소스를
+# 생성합니다.Job 리소스처럼 매번 새로운 작업을 실행해야 하는 경우 이옵션을 사용합니다.
+prune: false
+# 해당 옵션을 활성화 시키면 ArgoCD가 지속적으로 git Repository의 설정값과 운영 환경의
+# 값의싱크를 맞출려고 합니다. 기본적으로 5초마다 계속해서 sync를 시도하게 됩니다.
+selfHeal: false
+syncOptions:
+    - Validate=false                          # 리소스 유효성 검사 실행중지 ( kubectl apply --validate=false ) (기본은 true )
+    - CreateNamespace=false                   # Namespace 자동생성
+    - PrunePropagationPolicy=background       # prune 정책 (background, foreground, orphan)
+    - PruneLast=true                          # 리소스 제거 기능이 마지막에 수행되도록 설정 (ture, false)
